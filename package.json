@@ -1,0 +1,21 @@
+{
+  "name": "code-classroom",
+  "version": "1.0.0",
+  "description": "**CodeClassroom** is a full-stack MERN web application designed to streamline coding assignments in an educational setting. Teachers can create virtual classrooms, assign coding tasks, and students can join, submit their solutions, and get their code compiled in real-time. The platform supports C++, Java, and Python programming languages, making it versatile for various educational needs.",
+  "main": "backend/index.js",
+  "scripts": {
+    "dev": "nodemon backend/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
