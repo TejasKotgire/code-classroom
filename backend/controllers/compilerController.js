@@ -15,8 +15,8 @@ exports.compiler = async(req, res)=>{
             var envData = { OS : "windows" , cmd : "g++", options: {timeout:10000}};
             compiler.compileCPPWithInput(envData , code , input , function (data) {
                 if(data.error){
-                    console.log(data.error)
-                    res.send(data.error)
+                    // console.log(data.error)
+                    res.status(400).send(data.error)
 
                 }
                 else{
@@ -28,7 +28,7 @@ exports.compiler = async(req, res)=>{
             var envData = { OS : "windows" , cmd : "g++", options: {timeout:10000}};
             compiler.compileCPP(envData , code , function (data) {
                 if(data.error){
-                    res.send(data.error)
+                    res.status(400).send(data.error)
                 }
                 else{
                     console.log(data)
@@ -44,7 +44,7 @@ exports.compiler = async(req, res)=>{
             var envData = { OS : "windows"};
             compiler.compilePythonWithInput(envData , code , input , function (data) {
                 if(data.error){
-                    res.send(data.error)
+                    res.status(400).send(data.error)
                 }
                 else{
                     res.send({data : data.output});
@@ -55,7 +55,7 @@ exports.compiler = async(req, res)=>{
             var envData = { OS : "windows"};
             compiler.compilePython(envData , code , function (data) {
                 if(data.error){
-                    res.send(data.error)
+                    res.status(400).send(data.error)
                 }
                 else{
                     // console.log("data: ", data.output)
@@ -65,12 +65,12 @@ exports.compiler = async(req, res)=>{
         }
     }
 
-    if(lang == java){
-        if(inputRadio === "true"){
+    if(lang === "java"){
+        if(inputRadio == true){
             var envData = { OS : "windows"};
             compiler.compileJavaWithInput(envData , code , input , function (data) {
                 if(data.error){
-                    res.send(data.error)
+                    res.status(400).send(data.error)
                 }
                 else{
                     res.send({data : data.output});
@@ -81,7 +81,7 @@ exports.compiler = async(req, res)=>{
             var envData = { OS : "windows"};
             compiler.compileJava(envData , code , function (data) {
                 if(data.error){
-                    res.send(data.error)
+                    res.status(400).send(data.error)
                 }
                 else{
                     res.send({data : data.output});

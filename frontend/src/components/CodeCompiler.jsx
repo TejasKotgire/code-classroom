@@ -73,9 +73,10 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
           }
         })
       setOutput(response.data.data);
+      // console.log(response)
     } catch (error) {
-      setOutput('Error: Failed to compile code');
-      console.error(error);
+      console.error(error.response.data);
+      setOutput(error.response.data || 'Error: Failed to compile code');
     } finally {
       setIsLoading(false);
     }
