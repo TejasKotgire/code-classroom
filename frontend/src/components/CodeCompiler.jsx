@@ -61,7 +61,7 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
       //   })})
       //   console.log(response)
 
-        let response = await axios.post('http://localhost:3000/compilecode', {
+        let response = await axios.post('http://localhost:3001/compilecode', {
           code,
           language,
           input: useInput ? input : false,
@@ -74,7 +74,8 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
         })
       setOutput(response.data.data);
     } catch (error) {
-      setOutput('Error: Failed to compile code');
+      console.log(error)
+      // setOutput('Error: Failed to compile code');
       console.error(error);
     } finally {
       setIsLoading(false);
