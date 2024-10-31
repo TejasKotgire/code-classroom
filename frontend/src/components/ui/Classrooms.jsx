@@ -38,7 +38,7 @@ const Classrooms = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:3001/api/classrooms/join', 
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/classrooms/join`, 
         { classCode },
         {
           headers: {

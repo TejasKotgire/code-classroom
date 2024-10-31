@@ -51,6 +51,7 @@ exports.getAssignment = async (req, res)=>{
                 submissions : assignment.submissions
             };
         });
+        console.log(assignments)
         res.status(200).json({assignments})
     } catch (error) {
         console.log("error getting assignment in assignment controller", error);

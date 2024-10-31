@@ -22,7 +22,7 @@ connectDb();
 app.use('/api/auth', authRoutes);
 app.use('/api/classrooms', classroomRoutes);
 app.use('/api/assignments', assignmentRoutes)
-app.use('/compilecode', compilerRoutes)
+app.use('/api/compilecode', compilerRoutes)
 
 PORT = process.env.PORT || 3001;
 
