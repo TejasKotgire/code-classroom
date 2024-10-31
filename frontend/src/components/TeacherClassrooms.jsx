@@ -44,7 +44,7 @@ const TeacherClassrooms = () => {
 
     try {
       // console.log(className)
-      const res = await axios.post('http://localhost:3001/api/classrooms/create', {name : className},{
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/classrooms/create`, {name : className},{
         headers : {
           'authorization' : Cookies.get('authToken'),
         }

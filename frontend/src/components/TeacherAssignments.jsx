@@ -46,7 +46,7 @@ const TeacherAssignments = () => {
     // };
     
     try {
-      const res = await axios.post(`http://localhost:3001/api/assignments/new/${id.id}`, {title, description}, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/assignments/new/${id.id}`, {title, description}, {
         headers : {
           'Authorization' : Cookies.get('authToken')
         }
