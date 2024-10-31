@@ -61,7 +61,7 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
       //   })})
       //   console.log(response)
 
-        let response = await axios.post(`${import.meta.env.VITE_COMPILER_URL}/api/compilecode`, {
+        let response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/compilecode`, {
           code,
           language,
           input: useInput ? input : false,
