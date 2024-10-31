@@ -19,7 +19,7 @@ const ClassroomAssignments = () => {
       const fetchAssignments = async () => {
         try {
           // 671804df82dcbd92d02345a9
-          const response = await axios.get(`http://localhost:3001/api/assignments/${id.classId}`, {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/assignments/${id.classId}`, {
             headers : {
               'Authorization' : Cookies.get('authToken')
             }
