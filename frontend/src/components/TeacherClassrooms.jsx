@@ -16,7 +16,7 @@ const TeacherClassrooms = () => {
   const fetchClassrooms = async ()=>{
     try {
       // console.log(Cookies.get('authToken'))
-      const res = await axios.get('http://localhost:3001/api/classrooms', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/classrooms`, {
         headers : {
           // 'Authorization' : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MTdkMmMwYWJiMDg2MGYxYjhmM2Q4NiIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzI5NzA4ODkyLCJleHAiOjE3Mjk3MTI0OTJ9.lDNRMlC1b__zTQpoEJyzLBGEAS8Wi9uGHF-Q6zy_8cM"
           'authorization' : Cookies.get('authToken')

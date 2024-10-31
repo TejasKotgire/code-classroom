@@ -17,7 +17,7 @@ export const Signup = () => {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3001/api/auth/register', { name : name, email : email, password : password, role : role });
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, { name : name, email : email, password : password, role : role });
       // console.log(res);
       if(res.status===200){
         navigate('/login');

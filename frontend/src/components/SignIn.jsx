@@ -13,7 +13,7 @@ const SignIn = () => {
   const handleSubmit = async(e)=>{
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3001/api/auth/login', { email : email, password : password })
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, { email : email, password : password })
       // console.log(res);
       // let decodedToken = jwt_decode.decode(res.data.token);
       // console.log(decodedToken)
