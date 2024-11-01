@@ -1,6 +1,19 @@
 import React from 'react';
-import { Code, Users, BookOpen, Play, Award, Terminal } from 'lucide-react';
-import { Book } from 'lucide-react';
+import { Code2, Users, BookOpen, Play, Award, Terminal } from 'lucide-react';
+
+const Logo = () => {
+  return (
+    <div className="flex-shrink-0 flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer">
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-lg p-2">
+        <Code2 className="h-6 w-6 text-white" />
+      </div>
+      <div className="flex items-center">
+        <span className="text-xl font-bold text-gray-900 tracking-tight">Code</span>
+        <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 text-transparent bg-clip-text">Classroom</span>
+      </div>
+    </div>
+  );
+};
 
 const HomePage = () => {
   const features = [
@@ -15,7 +28,7 @@ const HomePage = () => {
       description: "Create or join coding classes with unique access codes and real-time interaction"
     },
     {
-      icon: <Code className="w-6 h-6 text-blue-500" />,
+      icon: <Code2 className="w-6 h-6 text-blue-500" />,
       title: "Multiple Languages",
       description: "Support for C++, Java, Python and more programming languages"
     },
@@ -38,14 +51,9 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-         <div className="flex items-center mt-5 ml-5">
-            <div className="flex-shrink-0 flex items-center">
-              <Book className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-800">
-                CodeClassroom
-              </span>
-            </div>
-          </div>
+      <div className="flex items-center mt-5 ml-5">
+        <Logo />
+      </div>
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
