@@ -12,6 +12,15 @@ const Navbar = () => {
     Cookies.remove('userId');
     navigate('/login')
   }
+  function navClass(){
+    let role = Cookies.get('role');
+    if(role == 'teacher'){
+      navigate('/admin/classrooms')
+    }
+    else{
+      navigate('/classrooms')
+    }
+  }
   return (
     <nav className="bg-white border-b border-gray-200 fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
@@ -37,7 +46,8 @@ const Navbar = () => {
                 Assignments
               </Link>
               <Link
-                to="/classrooms"
+                onClick={navClass}
+                // to="/classrooms"
                 className="flex items-center text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <Users className="h-5 w-5 mr-1" />
@@ -90,7 +100,8 @@ const Navbar = () => {
             Assignments
           </a>
           <a
-            href="/classrooms"
+            // href="/classrooms"
+            onClick={navClass}
             className="flex items-center text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
           >
             <Users className="h-5 w-5 mr-1" />
