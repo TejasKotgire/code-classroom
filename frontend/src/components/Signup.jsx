@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Code2, AlertCircle } from 'lucide-react';
+
+// Utility component for consistent styling
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export const Signup = () => {
-  const [role, setRole] = useState('student'); // Default role is student
+  const [role, setRole] = useState('student');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  const handleSubmit = async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, { name : name, email : email, password : password, role : role });
-      // console.log(res);
-      if(res.status===200){
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, {
+        name,
+        email,
+        password,
+        role
+      });
+      if (res.status === 200) {
         navigate('/login');
       }
     } catch (error) {
@@ -29,120 +33,115 @@ export const Signup = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-          alt="CodeClassroom"
-        />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Register for a new account
-        </h2>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-center p-4 md:p-8">
+      <div className="w-full max-w-md space-y-8 relative">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg transform hover:scale-105 transition-transform duration-200">
+            <Code2 className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 text-center">
+            Join CodeClassroom
+          </h2>
+          <p className="mt-2 text-gray-600 text-center">
+            Start your learning journey today
+          </p>
+        </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Role Selection */}
-          <div>
-            <label className="block text-sm font-medium leading-6 text-gray-900">Select Role</label>
-            <div className="mt-2 flex space-x-4">
-              <label className="flex items-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-xl p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">I am a</label>
+                <div className="mt-2 flex gap-4">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={role === 'student'}
+                      onChange={() => setRole('student')}
+                      className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                    />
+                    <span className="text-sm text-gray-700">Student</span>
+                  </label>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={role === 'teacher'}
+                      onChange={() => setRole('teacher')}
+                      className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                    />
+                    <span className="text-sm text-gray-700">Teacher</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
                 <input
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={role === 'student'}
-                  onChange={handleRoleChange}
-                  className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                  id="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                 />
-                <span className="ml-2">Student</span>
-              </label>
-              <label className="flex items-center">
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email address
+                </label>
                 <input
-                  type="radio"
-                  name="role"
-                  value="teacher"
-                  checked={role === 'teacher'}
-                  onChange={handleRoleChange}
-                  className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                 />
-                <span className="ml-2">Teacher</span>
-              </label>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Name */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-              Name
-            </label>
-            <div className="mt-2">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={name}
-                onChange={(e)=> setName(e.target.value)}
-                required
-                className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-3 flex items-center space-x-2">
+                <AlertCircle className="h-5 w-5 text-red-400" />
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-              Email address
-            </label>
-            <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e)=> setEmail(e.target.value)}
-                autoComplete="email"
-                required
-                className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-              Password
-            </label>
-            <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e)=> setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-
-          <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 hover:scale-[1.02]"
             >
-              Register
+              Create Account
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <Link
+            to="/login"
+            className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors duration-200"
+          >
             Sign in
           </Link>
         </p>
@@ -151,4 +150,4 @@ export const Signup = () => {
   );
 };
 
-// export default Signup;
+export default Signup;

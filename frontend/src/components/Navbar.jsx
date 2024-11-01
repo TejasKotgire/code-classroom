@@ -10,7 +10,7 @@ const Navbar = () => {
     Cookies.remove('authToken');
     Cookies.remove('role');
     Cookies.remove('userId');
-    navigate('/login')
+    navigate('/')
   }
   function navClass(){
     let role = Cookies.get('role');
