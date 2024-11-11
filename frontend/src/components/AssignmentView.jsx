@@ -6,11 +6,11 @@ import Cookies from 'js-cookie'
 
 const AssignmentView = () => {
   const userId = Cookies.get('userId');
-  const { id } = useParams();
-  
+  const id = useParams();
+  // console.log(id.assignmentId)
   return (
     <div>
-      <CodeCompiler assignmentId={id} studentId={userId}/>
+      <CodeCompiler assignmentId={id.assignmentId} studentId={userId}/>
     </div>
   );
 };

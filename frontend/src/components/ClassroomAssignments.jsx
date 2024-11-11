@@ -99,7 +99,7 @@ const ClassroomAssignments = () => {
         <div className="space-y-4">
           {assignments.map((assignment) => (
             <div
-              key={assignment._id}
+              key={assignment.id}
               className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <div className="p-6">
@@ -145,7 +145,7 @@ const ClassroomAssignments = () => {
                   </div>
                   
                   <button
-                    onClick={() => window.location.href = `/assignment/${assignment._id}`}
+                    onClick={() => window.location.href = `/assignment/${assignment.id}`}
                     className="ml-4 flex items-center text-blue-600 hover:text-blue-700"
                   >
                     {assignment.status.toLowerCase() === 'pending' ? 'Start' : 'View'} 

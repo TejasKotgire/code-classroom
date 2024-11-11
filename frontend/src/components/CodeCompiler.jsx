@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Play, Terminal, Code2, FileInput, Send, Cookie } from 'lucide-react';
+import moment from 'moment';
 import axios from 'axios';
 import Cookies from 'js-cookie'
 
@@ -83,14 +84,20 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
   };
 
   const handleSubmit = async () => {
+    const now = moment();
+    const formattedDate = now.format('MM/DD/YYYY, h:mm:ss A');
     setIsSubmitting(true);
     try {
-      await axios.post(`http://localhost:3000/api/assignments/${assignmentId}/submit`, {
+      await axios.post(`http://localhost:3001/api/assignments/${assignmentId}/submit`, {
         code,
         language,
         assignmentId,
         studentId,
-        submittedAt: new Date().toISOString()
+        submittedAt: formattedDate
+      },{
+        headers : {
+          Authorization : Cookies.get('authToken')
+        }
       });
       setAlert({
         status: 'success',

@@ -30,20 +30,52 @@ exports.createAssignment = async(req, res) =>{
     }
 };
 
-exports.submitCode = async(req, res) => {};
+exports.submitCode = async(req, res) => {
+    const {code, language, assignmentId, studentId, submittedAt} = req.body;
+    try {
+        const assignment = await Assignment.findById(assignmentId);
+
+        let resend = assignment.submissions.find(s => s.student.equals(studentId));
+        // console.log(resend)
+        if(resend){
+            resend.code = code;
+            assignment.save();
+            res.status(200).json({
+                msg : "code updated successfully"
+            })
+        }
+        else{
+            assignment.submissions.push({
+                student : studentId,
+                code,
+                submittedAt
+            })
+            assignment.save();
+            res.status(200).json({
+                mag : "code submitted successfully"
+            });
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            msg : "error in assignment submit code controller"
+        });
+        console.log("error in assignment submit code controller" + error)
+    }
+};
 
 exports.getAssignment = async (req, res)=>{
     const classId = req.params.classroomId;
     try {
         const classname = await Classroom.findById(classId).populate({
             path : 'assignments',
-            select : 'title description status score submissions'
+            select : 'title description status score submissions _id'
         })
         let id = 0;
         const assignments = classname.assignments.map(assignment => {
-            id++;
+            // id++;
             return {
-                id : id,
+                id : assignment._id,
                 title: assignment.title,
                 description: assignment.description,
                 status: assignment.status,
