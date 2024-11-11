@@ -85,7 +85,7 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await axios.post('http://localhost:3000/api/submit-code', {
+      await axios.post(`http://localhost:3000/api/assignments/${assignmentId}/submit`, {
         code,
         language,
         assignmentId,

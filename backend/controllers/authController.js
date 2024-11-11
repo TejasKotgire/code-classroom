@@ -9,7 +9,7 @@ exports.register = async(req, res)=>{
     // console.log("hello")
     const {name, email, password, role} = req.body;
     try {
-        console.log('called')
+        // console.log('called')
         let user = await User.findOne({email});
         // console.log(user)
         if(user){

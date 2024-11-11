@@ -2,13 +2,15 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import CodeCompiler from '../components/CodeCompiler';
+import Cookies from 'js-cookie'
 
 const AssignmentView = () => {
+  const userId = Cookies.get('userId');
   const { id } = useParams();
   
   return (
     <div>
-      <CodeCompiler assignmentId={id} />
+      <CodeCompiler assignmentId={id} studentId={userId}/>
     </div>
   );
 };

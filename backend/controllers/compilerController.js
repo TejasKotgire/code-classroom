@@ -12,7 +12,7 @@ exports.compiler = async(req, res)=>{
 
     if(lang==="cpp"){
         if(inputRadio == true){
-            var envData = { OS : "windows" , cmd : "g++", options: {timeout:1000000}};
+            var envData = { OS : "windows" , cmd : "g++", options: {timeout:10000}};
             compiler.compileCPPWithInput(envData , code , input , function (data) {
                 if(data.error){
                     // console.log(data.error)
@@ -25,7 +25,7 @@ exports.compiler = async(req, res)=>{
             });
         }
         else{
-            var envData = { OS : "windows" , cmd : "g++", options: {timeout:1000000}};
+            var envData = { OS : "windows" , cmd : "g++", options: {timeout:10000}};
             compiler.compileCPP(envData , code , function (data) {
                 if(data.error){
                     res.status(400).send(data.error)
