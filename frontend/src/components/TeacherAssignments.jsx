@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -66,6 +66,13 @@ const TeacherAssignments = () => {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <div>
+          <button 
+            onClick={()=>{navigate(-1)}}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
+          >
+            <ArrowLeft size={20} />
+            Back to Classrooms
+          </button>
           <h1 className="text-2xl font-bold">Assignments</h1>
           <p className="text-gray-600">Create and manage coding assignments</p>
         </div>
@@ -101,7 +108,7 @@ const TeacherAssignments = () => {
             </div>
             <div className="px-4 py-3 bg-gray-50 flex justify-end gap-2">
               <button
-                onClick={() => {navigate('/submissions/:assignmentId')}}
+                onClick={() => {navigate(`/submissions/${assignment.id}`)}}
                 className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               >
                 View Submissions

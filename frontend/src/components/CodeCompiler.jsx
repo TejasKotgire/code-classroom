@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Terminal, Code2, FileInput, Send, Cookie } from 'lucide-react';
+import { Play, Terminal, Code2, FileInput, Send, ArrowLeft } from 'lucide-react';
 import moment from 'moment';
 import axios from 'axios';
 import Cookies from 'js-cookie'
@@ -31,6 +31,10 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
   const [alert, setAlert] = useState(null);
   const [lineCount, setLineCount] = useState(1);
 
+  const handleBack = () => {
+    window.history.back();
+  };
+
   const handleCodeChange = (e) => {
     const newCode = e.target.value;
     setCode(newCode);
@@ -41,40 +45,18 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
   const handleCompile = async () => {
     setIsLoading(true);
     try {
-      // const response = await axios.post('http://localhost:3000/api/compile', {
-      //   code,
-      //   language,
-      //   input: useInput ? input : false,
-      //   inputRadio: useInput,
-      //   assignmentId
-      // });
-      // const response = await fetch('http://localhost:3000/compilecode', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-          // code,
-          // language,
-          // input: useInput ? input : false,
-          // inputRadio : useInput,
-          // assignmentId
-      //   })})
-      //   console.log(response)
-
-        let response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/compilecode`, {
-          code,
-          language,
-          input: useInput ? input : false,
-          inputRadio : useInput,
-          assignmentId
-        }, {
-          headers : {
-            Authorization : Cookies.get('authToken')
-          }
-        })
+      let response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/compilecode`, {
+        code,
+        language,
+        input: useInput ? input : false,
+        inputRadio : useInput,
+        assignmentId
+      }, {
+        headers : {
+          Authorization : Cookies.get('authToken')
+        }
+      })
       setOutput(response.data.data);
-      // console.log(response)
     } catch (error) {
       console.error(error.response.data);
       setOutput(error.response.data || 'Error: Failed to compile code');
@@ -116,10 +98,20 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-        <Code2 className="h-8 w-8 mr-2 text-blue-600" />
-        CodeClassroom
-      </h1>
+      {/* Back Button and Header */}
+      <div className="flex items-center mb-6">
+        <button
+          onClick={handleBack}
+          className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-6 w-6 text-gray-600" />
+        </button>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+          <Code2 className="h-8 w-8 mr-2 text-blue-600" />
+          CodeClassroom
+        </h1>
+      </div>
 
       {/* Code Editor Section */}
       <div className="mb-8">

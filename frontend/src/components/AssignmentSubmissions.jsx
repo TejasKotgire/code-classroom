@@ -1,42 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Check, X } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie'
 
 const AssignmentSubmissions = ({ onBack }) => {
   // Mock data - in real app this would come from API
-  const [submissions, setSubmissions] = useState([
-    {
-      id: 1,
-      studentName: "Alice Johnson",
-      studentId: "STU001",
-      submittedAt: "2024-10-23T14:30:00",
-      code: `def calculate_sum(numbers):
-    total = 0
-    for num in numbers:
-        total += num
-    return total
-
-# Test the function
-numbers = [1, 2, 3, 4, 5]
-result = calculate_sum(numbers)
-print(f"Sum of numbers: {result}")`,
-      grade: null,
-      feedback: ""
-    },
-    {
-      id: 2,
-      studentName: "Bob Smith",
-      studentId: "STU002",
-      submittedAt: "2024-10-23T15:45:00",
-      code: `def calculate_sum(numbers):
-    return sum(numbers)
-
-# Test the function
-test_numbers = [1, 2, 3, 4, 5]
-print(f"Sum: {calculate_sum(test_numbers)}")`,
-      grade: 85,
-      feedback: "Good use of built-in sum function"
-    }
-  ]);
+  const id = useParams();
+  const assignmentId = id.assignmentId;
+  const navigate = useNavigate();
+  const [submissions, setSubmissions] = useState([]);
 
   const [expandedSubmission, setExpandedSubmission] = useState(null);
   const [editingGrade, setEditingGrade] = useState(null);
@@ -68,12 +41,31 @@ print(f"Sum: {calculate_sum(test_numbers)}")`,
     setFeedbackInput(submission.feedback || "");
   };
 
+  useEffect(()=>{
+    fetchSubmissions()
+  }, [])
+
+  const fetchSubmissions = async () => {
+    // code here
+    try {
+      const responses = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/assignments/view/${assignmentId}`, {
+        headers : {
+          'Authorization' : Cookies.get('authToken')
+        }
+      });
+      console.log(responses)
+      setSubmissions(responses.data)
+    } catch (error) {
+      console.log("error at getting assignment submissions" + error)
+    }
+  }
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6">
         <button 
-          onClick={onBack}
+          onClick={()=>{navigate(-1)}}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
         >
           <ArrowLeft size={20} />
@@ -95,7 +87,7 @@ print(f"Sum: {calculate_sum(test_numbers)}")`,
               <div>
                 <h3 className="font-semibold">{submission.studentName}</h3>
                 <p className="text-sm text-gray-600">
-                  ID: {submission.studentId} | Submitted: {formatDate(submission.submittedAt)}
+                  ID: {submission.student} | Submitted: {formatDate(submission.submittedAt)}
                 </p>
               </div>
               <div className="flex items-center gap-4">

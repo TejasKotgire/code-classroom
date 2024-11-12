@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Book, Calendar, Clock, ChevronRight, CheckCircle, XCircle } from 'lucide-react';
+import { Book, Calendar, Clock, ChevronRight, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie'
 
-
 const ClassroomAssignments = () => {
+  const navigate = useNavigate()
   const id = useParams();
   console.log(id.classId)
     const [assignments, setAssignments] = useState([]);
@@ -79,6 +79,13 @@ const ClassroomAssignments = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
+        <button 
+            onClick={()=>{navigate(-1)}}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
+          >
+            <ArrowLeft size={20} />
+            Back to Classrooms
+          </button>
         <h1 className="text-3xl font-bold text-gray-900 flex items-center">
           <Book className="mr-2 h-8 w-8 text-blue-600" />
           Assignments

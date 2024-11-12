@@ -31,7 +31,7 @@ exports.createAssignment = async(req, res) =>{
 };
 
 exports.submitCode = async(req, res) => {
-    const {code, language, assignmentId, studentId, submittedAt} = req.body;
+    const {code, assignmentId, studentId, submittedAt} = req.body;
     try {
         const assignment = await Assignment.findById(assignmentId);
 
@@ -87,5 +87,20 @@ exports.getAssignment = async (req, res)=>{
         res.status(200).json({assignments})
     } catch (error) {
         console.log("error getting assignment in assignment controller", error);
+    }
+}
+
+exports.getSubmissions = async (req, res)=> {
+    const assignmentId = req.params.assignmentId;
+    // console.log(assignmentId)
+    try {
+        const assignment = await Assignment.findById(assignmentId);
+        const submissions = assignment.submissions;
+        res.send(submissions);
+    } catch (error) {
+        console.log("error at getsubmissions" + error);
+        res.status(400).json({
+            msg : "error at getSubmissions"
+        })
     }
 }
