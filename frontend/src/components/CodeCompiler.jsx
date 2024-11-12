@@ -70,7 +70,7 @@ const CodeCompiler = ({ assignmentId, studentId }) => {
     const formattedDate = now.format('MM/DD/YYYY, h:mm:ss A');
     setIsSubmitting(true);
     try {
-      await axios.post(`http://localhost:3001/api/assignments/${assignmentId}/submit`, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/assignments/${assignmentId}/submit`, {
         code,
         language,
         assignmentId,
