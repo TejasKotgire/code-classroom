@@ -1,5 +1,6 @@
 const Assignment = require('../models/Assignment.model');
-const Classroom = require('../models/Classroom.model')
+const Classroom = require('../models/Classroom.model');
+const User = require('../models/User.model')
 
 exports.createAssignment = async(req, res) =>{
     let classroomId = req.params.classroomId;
@@ -94,13 +95,46 @@ exports.getSubmissions = async (req, res)=> {
     const assignmentId = req.params.assignmentId;
     // console.log(assignmentId)
     try {
-        const assignment = await Assignment.findById(assignmentId);
-        const submissions = assignment.submissions;
-        res.send(submissions);
+        const assignment = await Assignment.findById(assignmentId).populate('submissions.student', 'name');
+        const AllSubmissions = assignment.submissions.map(submission=> {
+            return{
+                submittedAt : submission.submittedAt,
+                code : submission.code,
+                student : submission.student._id,
+                studentName : submission.student.name,
+                id : submission.student._id,
+                grade : submission.grade
+            }
+        })
+        res.send(AllSubmissions);
     } catch (error) {
         console.log("error at getsubmissions" + error);
         res.status(400).json({
             msg : "error at getSubmissions"
         })
+    }
+}
+
+exports.updateGrade = async (req, res) => {
+    const { assignmentId, studentId } = req.params;
+    const { grade } = req.body;
+  
+    try {
+      const assignment = await Assignment.findById(assignmentId);
+      const submissionIndex = assignment.submissions.findIndex(sub => sub.student.toString() === studentId);
+  
+      if (submissionIndex === -1) {
+        return res.status(404).json({ msg: "Submission not found" });
+      }
+  
+      assignment.submissions[submissionIndex].grade = grade;
+      await assignment.save();
+  
+      res.json(assignment.submissions[submissionIndex]);
+    } catch (error) {
+      console.error("Error updating grade:", error);
+      res.status(400).json({
+        msg: "Error updating grade"
+      });
     }
 }

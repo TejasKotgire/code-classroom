@@ -23,10 +23,10 @@ const AssignmentSchema = new mongoose.Schema({
         enum : ['submitted', 'pending'],
         default : 'pending'
     },
-    score : {
-        type : Number,
-        default : 0
-    },
+    // score : {
+    //     type : Number,
+    //     default : 0
+    // },
     submissions : [
         {
             student : {
@@ -43,6 +43,11 @@ const AssignmentSchema = new mongoose.Schema({
             },
             submittedAt : {
                 type : String
+            },
+            status : {
+                type : String,
+                enum : ['submitted', 'pending'],
+                default : 'pending'
             }
         }
     ]

@@ -4,68 +4,72 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie'
 
-const AssignmentSubmissions = ({ onBack }) => {
-  // Mock data - in real app this would come from API
-  const id = useParams();
-  const assignmentId = id.assignmentId;
+const AssignmentSubmissions = () => {
+  const { assignmentId } = useParams();
   const navigate = useNavigate();
   const [submissions, setSubmissions] = useState([]);
-
   const [expandedSubmission, setExpandedSubmission] = useState(null);
+
   const [editingGrade, setEditingGrade] = useState(null);
   const [gradeInput, setGradeInput] = useState("");
-  const [feedbackInput, setFeedbackInput] = useState("");
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
 
-  const handleGradeSubmit = (submissionId) => {
+  const handleGradeSubmit = async (studentId) => {
     const grade = parseInt(gradeInput);
-    if (isNaN(grade) || grade < 0 || grade > 100) {
-      alert("Please enter a valid grade between 0 and 100");
+    if (isNaN(grade) || grade < 0 || grade > 10) {
+      alert("Please enter a valid grade between 0 and 10");
       return;
     }
 
-    setSubmissions(submissions.map(sub => 
-      sub.id === submissionId 
-        ? { ...sub, grade, feedback: feedbackInput }
-        : sub
-    ));
-    setEditingGrade(null);
+    try {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/assignments/${assignmentId}/grade/${studentId}`, {
+        grade
+      }, {
+        headers: {
+          'Authorization': Cookies.get('authToken')
+        }
+      });
+
+      setSubmissions(submissions.map(sub => 
+        sub.student === studentId ? { ...sub, grade } : sub
+      ));
+      setEditingGrade(null);
+    } catch (error) {
+      console.error("Error updating grade:", error);
+      alert("Error updating grade. Please try again.");
+    }
   };
 
   const startGrading = (submission) => {
-    setEditingGrade(submission.id);
+    setEditingGrade(submission.student);
     setGradeInput(submission.grade?.toString() || "");
-    setFeedbackInput(submission.feedback || "");
   };
 
-  useEffect(()=>{
-    fetchSubmissions()
-  }, [])
-
-  const fetchSubmissions = async () => {
-    // code here
-    try {
-      const responses = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/assignments/view/${assignmentId}`, {
-        headers : {
-          'Authorization' : Cookies.get('authToken')
-        }
-      });
-      console.log(responses)
-      setSubmissions(responses.data)
-    } catch (error) {
-      console.log("error at getting assignment submissions" + error)
-    }
-  }
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/assignments/view/${assignmentId}`, {
+          headers: {
+            'Authorization': Cookies.get('authToken')
+          }
+        });
+        setSubmissions(response.data);
+      } catch (error) {
+        console.error("Error fetching submissions:", error);
+      }
+    };
+    fetchSubmissions();
+  }, [assignmentId]);
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6">
         <button 
-          onClick={()=>{navigate(-1)}}
+          onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
         >
           <ArrowLeft size={20} />
@@ -79,7 +83,7 @@ const AssignmentSubmissions = ({ onBack }) => {
       <div className="space-y-4">
         {submissions.map((submission) => (
           <div 
-            key={submission.id}
+            key={submission.student}
             className="border rounded-lg bg-white overflow-hidden"
           >
             {/* Submission Header */}
@@ -93,22 +97,22 @@ const AssignmentSubmissions = ({ onBack }) => {
               <div className="flex items-center gap-4">
                 {submission.grade !== null && (
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full">
-                    Grade: {submission.grade}/100
+                    Grade: {submission.grade}/10
                   </span>
                 )}
                 <button
                   onClick={() => setExpandedSubmission(
-                    expandedSubmission === submission.id ? null : submission.id
+                    expandedSubmission === submission.student ? null : submission.student
                   )}
                   className="text-blue-600 hover:text-blue-800"
                 >
-                  {expandedSubmission === submission.id ? "Hide Code" : "View Code"}
+                  {expandedSubmission === submission.student ? "Hide Code" : "View Code"}
                 </button>
               </div>
             </div>
 
             {/* Expanded Code View */}
-            {expandedSubmission === submission.id && (
+            {expandedSubmission === submission.student && (
               <div>
                 {/* Code Display */}
                 <div className="p-4 bg-gray-900 text-white overflow-x-auto">
@@ -119,43 +123,31 @@ const AssignmentSubmissions = ({ onBack }) => {
 
                 {/* Grading Section */}
                 <div className="p-4 bg-gray-50 border-t">
-                  {editingGrade === submission.id ? (
+                  {editingGrade === submission.student ? (
                     <form 
                       onSubmit={(e) => {
                         e.preventDefault();
-                        handleGradeSubmit(submission.id);
+                        handleGradeSubmit(submission.student);
                       }}
                       className="space-y-3"
                     >
                       <div>
                         <label className="block text-sm font-medium mb-1">
-                          Grade (0-100)
+                          Grade (0-10)
                         </label>
                         <input
                           type="number"
                           min="0"
-                          max="100"
+                          max="10"
                           value={gradeInput}
                           onChange={(e) => setGradeInput(e.target.value)}
                           className="px-3 py-2 border rounded-md w-32"
                           required
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">
-                          Feedback
-                        </label>
-                        <textarea
-                          value={feedbackInput}
-                          onChange={(e) => setFeedbackInput(e.target.value)}
-                          className="w-full px-3 py-2 border rounded-md"
-                          rows={3}
-                        />
-                      </div>
                       <div className="flex gap-2">
                         <button
                           type="submit"
-                          onClick={()=>setEditingGrade(null)}
                           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
                         >
                           <Check size={16} />
@@ -174,24 +166,15 @@ const AssignmentSubmissions = ({ onBack }) => {
                   ) : (
                     <div className="space-y-2">
                       {submission.grade !== null ? (
-                        <>
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <p className="font-medium">Grade: {submission.grade}/100</p>
-                              {submission.feedback && (
-                                <p className="text-sm text-gray-600">
-                                  Feedback: {submission.feedback}
-                                </p>
-                              )}
-                            </div>
-                            <button
-                              onClick={() => startGrading(submission)}
-                              className="px-4 py-2 text-sm border rounded-md hover:bg-gray-100"
-                            >
-                              Edit Grade
-                            </button>
-                          </div>
-                        </>
+                        <div className="flex justify-between items-center">
+                          <p className="font-medium">Grade: {submission.grade}/10</p>
+                          <button
+                            onClick={() => startGrading(submission)}
+                            className="px-4 py-2 text-sm border rounded-md hover:bg-gray-100"
+                          >
+                            Edit Grade
+                          </button>
+                        </div>
                       ) : (
                         <button
                           onClick={() => startGrading(submission)}
