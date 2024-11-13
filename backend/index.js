@@ -15,7 +15,11 @@ const compilerRoutes = require('./routes/compilerRoutes.js');
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'https://code-classroom.vercel.app', // replace with the specific frontend origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],   // specify allowed HTTP methods if necessary
+    credentials: true                            // include if your app requires credentials
+  }));
 dotenv.config();
 connectDb();
 
