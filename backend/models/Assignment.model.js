@@ -39,7 +39,7 @@ const AssignmentSchema = new mongoose.Schema({
             },
             grade : {
                 type : Number,
-                default : 0
+                default : undefined
             },
             submittedAt : {
                 type : String

@@ -90,7 +90,7 @@ const TeacherAssignments = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {assignments.map((assignment) => (
           <div
-            key={assignment.id}
+            key={assignment._id}
             className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white"
           >
             <div className="p-4">
@@ -108,7 +108,7 @@ const TeacherAssignments = () => {
             </div>
             <div className="px-4 py-3 bg-gray-50 flex justify-end gap-2">
               <button
-                onClick={() => {navigate(`/submissions/${assignment.id}`)}}
+                onClick={() => {navigate(`/submissions/${assignment._id}`)}}
                 className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               >
                 View Submissions

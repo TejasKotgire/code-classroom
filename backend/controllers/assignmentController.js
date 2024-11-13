@@ -49,7 +49,8 @@ exports.submitCode = async(req, res) => {
             assignment.submissions.push({
                 student : studentId,
                 code,
-                submittedAt
+                submittedAt,
+                status : "submitted"
             })
             assignment.save();
             res.status(200).json({
@@ -65,31 +66,63 @@ exports.submitCode = async(req, res) => {
     }
 };
 
-exports.getAssignment = async (req, res)=>{
-    const classId = req.params.classroomId;
+exports.getAssignment = async (req, res) => {
+    const classroomId = req.params.classroomId;
+    const userId = req.user.id; 
+    // console.log(userId)
     try {
-        const classname = await Classroom.findById(classId).populate({
-            path : 'assignments',
-            select : 'title description status score submissions _id'
-        })
-        let id = 0;
-        const assignments = classname.assignments.map(assignment => {
-            // id++;
+        // Find classroom and populate assignments
+        // console.log(classroomId)
+        const classroom = await Classroom.findById(classroomId)
+            .populate('assignments');
+        // console.log(classroom)
+        if (!classroom) {
+            return res.status(404).json({
+                success: false,
+                message: 'Classroom not found'
+            });
+        }
+
+        const assignments = await Promise.all(classroom.assignments.map(async (assignmentId) => {
+            // console.log(assignmentId._id)
+            const assignment = await Assignment.findById(assignmentId._id);
+            // console.log(assignment)
+            // Find user's submission
+            // console.log(assignmentId)
+            let grade = 0;
+            let submitted = "pending";
+            const userSubmission = assignment.submissions.map(
+                sub => {sub.student === userId
+                    grade = sub.grade
+                    submitted = sub.status
+                }
+                // sub => console.log(sub.student + userId)
+            );
+            // console.log(userSubmission)
             return {
-                id : assignment._id,
+                _id: assignment._id,
                 title: assignment.title,
                 description: assignment.description,
-                status: assignment.status,
-                score: assignment.score,
+                submitted: submitted,
+                grade: grade,
                 submissions : assignment.submissions
             };
+        }));
+
+        res.status(200).json({
+            success: true,
+            assignments
         });
-        // console.log(assignments)
-        res.status(200).json({assignments})
+
     } catch (error) {
-        console.log("error getting assignment in assignment controller", error);
+        console.error('Error in getAssignments:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching assignments',
+            error: error.message
+        });
     }
-}
+};
 
 exports.getSubmissions = async (req, res)=> {
     const assignmentId = req.params.assignmentId;
@@ -97,6 +130,7 @@ exports.getSubmissions = async (req, res)=> {
     try {
         const assignment = await Assignment.findById(assignmentId).populate('submissions.student', 'name');
         const AllSubmissions = assignment.submissions.map(submission=> {
+            // console.log(submission.student._id)
             return{
                 submittedAt : submission.submittedAt,
                 code : submission.code,
